@@ -8,12 +8,6 @@ sudo systemctl disable vufind-metaproxy || echo "Warning: Failed to disable serv
 
 # Remove symlinks for service and logrotate files
 echo "Removing symlinks..."
-if [ -L "/etc/systemd/system/vufind-metaproxy.service" ]; then
-    sudo rm /etc/systemd/system/vufind-metaproxy.service || echo "Error: Failed to remove service symlink."
-else
-    echo "Service symlink does not exist."
-fi
-
 if [ -L "/etc/logrotate.d/vufind-metaproxy" ]; then
     sudo rm /etc/logrotate.d/vufind-metaproxy || echo "Error: Failed to remove logrotate symlink."
 else
