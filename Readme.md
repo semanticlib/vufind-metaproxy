@@ -14,9 +14,7 @@ The metaproxy configuration is based on the example by Michael Lackhoff as discu
 - YAZ toolkit (only for testing)
 - Linux/Unix environment
 
-## Installation
-
-Install Metaproxy and dependencies:
+#### Install Metaproxy and dependencies
 
 For example, on Debian 12:
 ```bash
