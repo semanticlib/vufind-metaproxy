@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!--
+Metaproxy config for VuFind:
+    * responds to SRU and Z39.50
+    * converts Z39.50 search attributes to Solr index names
+    * presents MARC (both MARCXML and USMARC/MARC21) from fullrecord field of biblio core
+-->
+<metaproxy xmlns="http://indexdata.com/metaproxy" version="1.0">
+  <start route="start" />
+  <routes>
+    <route id="start">
+      <filter type="frontend_net">
+        <threads>10</threads>
+        <port>@:2100</port>
+      </filter>
+      <filter type="sru_z3950" />
+      <filter type="query_rewrite">
+        <xslt stylesheet="xsl/pql-to-solr.xsl" />
+      </filter>
+      <!-- Enable for debugging -->
+      <!-- 
+      <filter type="log">
+          <message>F</message>
+          <category apdu="true" session="true" />
+      </filter> 
+      -->
+      <filter type="record_transform">
+        <retrievalinfo xmlns="http://indexdata.com/yaz" version="1.0">
+          <retrieval syntax="usmarc" name="F">
+            <backend>
+              <xslt stylesheet="xsl/solr-fullrecord.xsl" />
+              <xslt stylesheet="xsl/fullrecord2marc.xsl" />
+              <marc inputformat="xml" outputformat="marc" outputcharset="utf-8" />
+            </backend>
+          </retrieval>
+
+          <retrieval syntax="xml" name="marcxml">
+            <backend>
+              <xslt stylesheet="xsl/solr-fullrecord.xsl" />
+              <xslt stylesheet="xsl/fullrecord2marc.xsl" />
+            </backend>
+          </retrieval>
+        </retrievalinfo>
+      </filter>
+      <filter type="zoom" xmlns="http://indexdata.com/metaproxy">
+        <torus xsldir="xsl" element_transform="custom" element_raw="raw">
+          <records>
+            <record>
+              <udb>vufind</udb>
+              <sru>solr</sru>
+              <zurl>localhost:8983/solr/biblio/select</zurl>
+              <piggyback>true</piggyback>
+              <cclmap_term>u=allfields t=z</cclmap_term>
+              <cclmap_ti>1=title_full t=z s=pw</cclmap_ti>
+              <cclmap_au>1=author-letter s=pw t=r</cclmap_au>
+              <cclmap_date>1=publishDate r=r</cclmap_date>
+              <cclmap_su>1=topic_facet s=al</cclmap_su>
+              <cclmap_isbn>1=isbn</cclmap_isbn>
+              <cclmap_issn>1=issn</cclmap_issn>
+              <cclmap_la>1=language</cclmap_la>
+              <cclmap_se>1=series</cclmap_se>
+              <cclmap_pu>1=publisher</cclmap_pu>
+              <cclmap_ph>1=physical</cclmap_ph> <!-- pages -->
+              <cclmap_ids>1=ctrlnum</cclmap_ids>
+              <cclmap_cn>1=callnumber</cclmap_cn>
+              <cclmap_id>1=id</cclmap_id>
+            </record>
+          </records>
+        </torus>
+        <!-- more context Sets:
+        https://www.loc.gov/standards/sru/cql/contextSets/listOfContextSets.html -->
+        <fieldmap cql="cql.serverChoice" />           <!-- info:srw/cql-context-set/1/cql-v1.1 -->
+        <!-- fieldmap cql="cql.anywhere"/ -->
+        <!-- querytype ccl       cql (s. pql-to-solr.xsl for querytype rpn) -->
+        <fieldmap ccl="ti" cql="dc.title" />        <!-- info:srw/cql-context-set/1/dc-v1.1 -->
+        <fieldmap ccl="au" cql="dc.creator" />
+        <fieldmap ccl="date" cql="dc.date" />
+        <fieldmap ccl="su" cql="dc.subject" />
+        <fieldmap ccl="isbn" cql="dc.identifier.isbn" />
+        <fieldmap ccl="isbn" cql="bath.isbn" />       <!-- http://zing.z3950.org/cql/bath/2.0/ isbn? -->
+        <fieldmap ccl="issn" cql="dc.identifier.issn" />
+        <fieldmap ccl="issn" cql="bath.issn" />
+        <fieldmap ccl="la" cql="dc.language" />
+        <fieldmap ccl="se" cql="bib.titleSeries" /> <!-- info:srw/cql-context-set/1/bib-v1 -->
+        <fieldmap ccl="pu" cql="dc.publisher" />
+        <fieldmap ccl="ids" cql="dc.identifier" />
+        <fieldmap ccl="cn" cql="local.callnumber" /> <!-- anyone knows a better choice? -->
+        <fieldmap ccl="id" cql="rec.identifier">
+          <title lang="en">Record Identifier</title>
+        </fieldmap>
+      </filter>
+      <filter type="bounce" />
+    </route>
+  </routes>
+</metaproxy>

@@ -1,0 +1,31 @@
+# VSCode specific
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Logs and databases
+*.log
+
+# XML related
+*.xml.bak
+*.xml~
+*.xsd~
+
+# Temporary files
+*.tmp
+*~
+.*.swp
+.DS_Store
+/tmp/
+
+# Environment files
+.env
+.env.local
+
+# Metaproxy specific
+*.pid
+*.YAZ
+*.mf

@@ -1,0 +1,16 @@
+[Unit]
+Description=VuFind MetaProxy Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/metaproxy -c /usr/local/vufind-metaproxy/vufind.xml
+WorkingDirectory=/usr/local/vufind-metaproxy
+Restart=always
+RestartSec=5
+User=your-username
+Group=your-group
+StandardOutput=append:/var/log/vufind-metaproxy.log
+StandardError=append:/var/log/vufind-metaproxy.log
+
+[Install]
+WantedBy=multi-user.target
