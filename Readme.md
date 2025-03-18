@@ -32,14 +32,14 @@ sudo apt install metaproxy yaz
 1. Edit `[vufind]/import/marc_local.properties` file before indexing:
     - Set `fullrecord = FullRecordAsXML`
 
-2. **Important**: Ensure that default response format on biblio core of Solr is set to xml:
+2. **Important**: Ensure that default response format on biblio core of Solr is set to XML:
     - Edit `[vufind]/solr/vufind/biblio/conf/solrconfig.xml`
     - Look for `<requestHandler name="standard" class="solr.SearchHandler" default="true">`
     - Under `<lst name="defaults">` add `<str name="wt">xml</str>`
     - Restart Solr
 
 
-## Download:
+## Download
 
 ```bash
 git clone https://github.com/semanticlib/vufind-metaproxy.git
@@ -51,15 +51,16 @@ git clone https://github.com/semanticlib/vufind-metaproxy.git
 
 ## Test Run
 
-To manually start the Metaproxy gateway, run the following commands:
+To manually start the Metaproxy gateway, run:
+
 ```bash
-cd /usr/local/vufind-metaproxy
+cd vufind-metaproxy
 metaproxy -c vufind.xml
 ```
 
 #### Testing Z39.50 connection:
 
-```bash
+```
 yaz-client localhost:2100/vufind
 Z> find @attr 1=4 test
 Z> show 1+1
@@ -68,6 +69,7 @@ Z> show 1+1
 ```
 
 #### Test SRU connection:
+
 ```bash
 curl "http://localhost:2100/vufind?operation=explain"
 curl "http://localhost:2100/vufind?operation=searchRetrieve&query=title=test"
@@ -79,14 +81,15 @@ curl "http://localhost:2100/vufind?operation=searchRetrieve&query=title=test&max
 
 To install the Metaproxy gateway as a systemd service, run the following commands:
 ```bash
-cd /usr/local/vufind-metaproxy
+cd /path/to/vufind-metaproxy
 sudo bash install_service.sh
 ```
 
 The installation script will:
-1. Update the service and logrotate files with the specified user and group.
-2. Deploy the service and logrotate configuration files.
-3. Start and enable the service.
+1. Copy the files into installation dir (default: `/usr/local/vufind-metaproxy`)
+2. Update the service and logrotate files with the specified user and group.
+3. Deploy the service and logrotate configuration files.
+4. Start and enable the service.
 
 After installation, `vufind-metaproxy` service will automatically start on system boot.
 
@@ -98,13 +101,10 @@ Logs are stored in `/var/log/vufind-metaproxy.log`. Log rotation is configured t
 
 To uninstall the service run this:
 ```bash
-sudo bash /usr/local/vufind-metaproxy/uninstall_service.sh
+cd /path/to/vufind-metaproxy
+sudo bash uninstall_service.sh
 ```
 
-(Optional) Remove the log file:
-```bash
-sudo rm /var/log/vufind-metaproxy.log
-```
 
 ## Important links
 
