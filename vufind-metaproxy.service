@@ -3,8 +3,8 @@ Description=VuFind MetaProxy Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/metaproxy -c /usr/local/vufind-metaproxy/vufind.xml
-WorkingDirectory=/usr/local/vufind-metaproxy
+ExecStart=/usr/bin/metaproxy -c /path/to/vufind-metaproxy/vufind.xml
+WorkingDirectory=/path/to/vufind-metaproxy
 Restart=always
 RestartSec=5
 User=your-username

@@ -51,6 +51,7 @@ chown -R "$SERVICE_USER:$SERVICE_GROUP" "$INSTALL_DIR" || { echo "Error: Failed 
 
 # Update user and group in the service file
 echo "Updating service file with user, group, and working directory..."
+sed -i "s|ExecStart=.*|ExecStart=/usr/bin/metaproxy -c ${INSTALL_DIR//\//\\/}/vufind.xml|g" "$SERVICE_FILE" || { echo "Error: Failed to update ExecStart"; exit 1; }
 sed -i "s|WorkingDirectory=.*|WorkingDirectory=$INSTALL_DIR|g" "$SERVICE_FILE" || { echo "Error: Failed to update WorkingDirectory"; exit 1; }
 sed -i "s/User=your-username/User=$SERVICE_USER/g" "$SERVICE_FILE" || { echo "Error: Failed to update User"; exit 1; }
 sed -i "s/Group=your-group/Group=$SERVICE_GROUP/g" "$SERVICE_FILE" || { echo "Error: Failed to update Group"; exit 1; }
